@@ -36,6 +36,9 @@ class MbedTLS(ConanFile):
         if self.settings.os == "Windows" and self.options.shared:
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = "On"
         
+        if self.settings.compiler == 'Visual Studio':
+            cmake.definitions["MBEDTLS_PLATFORM_SNPRINTF_MACRO"] = "snprintf"
+            
         cmake.definitions["USE_SHARED_MBEDTLS_LIBRARY"] = self.options.shared
         cmake.definitions["USE_STATIC_MBEDTLS_LIBRARY"] = not self.options.shared
         cmake.configure(build_folder=self.build_subfolder)
