@@ -56,3 +56,4 @@ class MbedTLS(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = [ 'mbedtls', 'mbedx509', 'mbedcrypto' ]
+        self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
