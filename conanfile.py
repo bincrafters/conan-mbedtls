@@ -45,8 +45,7 @@ class MbedTLS(ConanFile):
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
 
-    
-    def build(self):            
+    def build(self):
         cmake = self.configure_cmake()
         cmake.build()
         
@@ -55,5 +54,5 @@ class MbedTLS(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = [ 'mbedtls', 'mbedx509', 'mbedcrypto' ]
+        self.cpp_info.libs = ['mbedtls', 'mbedx509', 'mbedcrypto']
         self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
