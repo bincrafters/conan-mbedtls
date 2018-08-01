@@ -37,15 +37,11 @@ class MbedTLS(ConanFile):
         if self.settings.os == "Windows" and self.options.shared:
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = "On"
 
-        # if self.settings.compiler == 'Visual Studio':
-            # cmake.definitions["CMAKE_C_FLAGS"] = "-DMBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf"
-            # cmake.definitions["CMAKE_CXX_FLAGS"] = "-DMBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf"
-       
         cmake.definitions["USE_SHARED_MBEDTLS_LIBRARY"] = self.options.shared
         cmake.definitions["USE_STATIC_MBEDTLS_LIBRARY"] = not self.options.shared
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
-    
+
     def build(self):
         cmake = self.configure_cmake()
         cmake.build()
@@ -55,8 +51,6 @@ class MbedTLS(ConanFile):
         cmake.install()
         
     def package_info(self):
-        # the order below matters. If changed some linux builds may fail.
-        self.cpp_info.libs = [ 'mbedtls', 'mbedx509', 'mbedcrypto' ]
-
-        if self.settings.os == "Windows":
+        self.cpp_info.libs = ['mbedtls', 'mbedx509', 'mbedcrypto']
+        if self.settings.compiler == 'Visual Studio':
             self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
