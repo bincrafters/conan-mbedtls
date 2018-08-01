@@ -79,3 +79,4 @@ class MbedTLS(ConanFile):
         self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
         if self.options.shared:
             self.cpp_info.defines.append('X509_USE_SHARED')
+        self.cpp_info.bindirs.append('lib')
