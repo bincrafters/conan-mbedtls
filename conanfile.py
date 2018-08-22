@@ -28,6 +28,9 @@ class MbedTLS(ConanFile):
         extracted_dir = '{0}-{0}-{1}'.format(self.name, self.version)
         os.rename(extracted_dir, self.source_subfolder)
 
+        tools.replace_in_file(os.path.join(self.source_subfolder, 'CMakeLists.txt'),
+                              'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")', '')
+
         x509_crt_h = os.path.join(self.source_subfolder, 'include', 'mbedtls', 'x509_crt.h')
         tools.replace_in_file(x509_crt_h,
                               '#if defined(MBEDTLS_X509_CRT_PARSE_C)',
