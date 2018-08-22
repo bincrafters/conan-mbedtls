@@ -28,6 +28,9 @@ class MbedTLS(ConanFile):
         extracted_dir = '{0}-{0}-{1}'.format(self.name, self.version)
         os.rename(extracted_dir, self.source_subfolder)
 
+        tools.replace_in_file(os.path.join(self.source_subfolder, 'CMakeLists.txt'),
+                              'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")', '')
+
         x509_crt_h = os.path.join(self.source_subfolder, 'include', 'mbedtls', 'x509_crt.h')
         tools.replace_in_file(x509_crt_h,
                               '#if defined(MBEDTLS_X509_CRT_PARSE_C)',
@@ -78,7 +81,10 @@ class MbedTLS(ConanFile):
     def package_info(self):
         self.cpp_info.libs = ['mbedtls', 'mbedx509', 'mbedcrypto']
         if self.settings.compiler == 'Visual Studio':
-            self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
+            if int(str(self.settings.compiler.version)) < 14:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=MBEDTLS_PLATFORM_STD_SNPRINTF")
+            else:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
         if self.options.shared:
             self.cpp_info.defines.append('X509_USE_SHARED')
         self.cpp_info.bindirs.append('lib')
