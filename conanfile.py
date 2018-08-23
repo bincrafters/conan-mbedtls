@@ -15,11 +15,15 @@ class MbedTLS(ConanFile):
     generators = "cmake"
     exports_sources = ["CMakeLists.txt"]
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False] }
-    default_options = "shared=False"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = "shared=False", "fPIC=True"
 
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
+
+    def config_options(self):
+        if self.settings.os == 'Windows':
+            del self.options.fPIC
 
     def source(self):
         source_url = "https://github.com/ARMmbed/mbedtls"
@@ -61,6 +65,8 @@ class MbedTLS(ConanFile):
         cmake.verbose = True
         cmake.definitions["ENABLE_TESTING"] = "Off"
         cmake.definitions["ENABLE_PROGRAMS"] = "Off"
+        if self.settings.os != 'Windows':
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
 
         if self.settings.os == "Windows" and self.options.shared:
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = "On"
