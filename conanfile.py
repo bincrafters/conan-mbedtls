@@ -79,7 +79,11 @@ class MbedTLS(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ['mbedtls', 'mbedx509', 'mbedcrypto']
-        self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
+        if self.settings.compiler == 'Visual Studio':
+            if int(str(self.settings.compiler.version)) < 14:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=MBEDTLS_PLATFORM_STD_SNPRINTF")
+            else:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
         if self.options.shared:
             self.cpp_info.defines.append('X509_USE_SHARED')
         self.cpp_info.bindirs.append('lib')
