@@ -15,10 +15,14 @@ class MbedTLS(ConanFile):
     generators = "cmake"
     exports_sources = ["CMakeLists.txt"]
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False] }
-    default_options = "shared=False"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = "shared=False", "fPIC=True"
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
+
+    def config_options(self):
+        if self.settings.os == 'Windows':
+            del self.options.fPIC
 
     def source(self):
         source_url = "https://github.com/ARMmbed/mbedtls"
@@ -26,6 +30,9 @@ class MbedTLS(ConanFile):
         # Not a mistake, name is actually mbedtls-mbedtls-version
         extracted_dir = '{0}-{0}-{1}'.format(self.name, self.version)
         os.rename(extracted_dir, self.source_subfolder)
+
+        tools.replace_in_file(os.path.join(self.source_subfolder, 'CMakeLists.txt'),
+                              'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")', '')
 
         x509_crt_h = os.path.join(self.source_subfolder, 'include', 'mbedtls', 'x509_crt.h')
         tools.replace_in_file(x509_crt_h,
@@ -57,6 +64,8 @@ class MbedTLS(ConanFile):
         cmake.verbose = True
         cmake.definitions["ENABLE_TESTING"] = "Off"
         cmake.definitions["ENABLE_PROGRAMS"] = "Off"
+        if self.settings.os != 'Windows':
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.fPIC
 
         if self.settings.os == "Windows" and self.options.shared:
             cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = "On"
@@ -70,13 +79,19 @@ class MbedTLS(ConanFile):
         cmake = self.configure_cmake()
         cmake.build()
         
-    def package(self):   
+    def package(self):
+        self.copy(pattern="LICENSE", dst="licenses", src=self.source_subfolder)
+        self.copy(pattern="apache-2.0.txt", dst="licenses", src=self.source_subfolder)
         cmake = self.configure_cmake()
         cmake.install()
 
     def package_info(self):
         self.cpp_info.libs = ['mbedtls', 'mbedx509', 'mbedcrypto']
-        self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
+        if self.settings.compiler == 'Visual Studio':
+            if int(str(self.settings.compiler.version)) < 14:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=MBEDTLS_PLATFORM_STD_SNPRINTF")
+            else:
+                self.cpp_info.defines.append("MBEDTLS_PLATFORM_SNPRINTF_MACRO=snprintf")
         if self.options.shared:
             self.cpp_info.defines.append('X509_USE_SHARED')
         self.cpp_info.bindirs.append('lib')
