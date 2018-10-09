@@ -61,6 +61,9 @@ class MbedTLSConan(ConanFile):
         tools.replace_in_file(x509_crt_h,
                               'extern const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;',
                               'X509_EXPORT const mbedtls_x509_crt_profile mbedtls_x509_crt_profile_suiteb;')
+        tools.replace_in_file(os.path.join(self.source_subfolder, 'include', 'mbedtls', 'bn_mul.h'),
+                              '#if defined(__i386__) && defined(__OPTIMIZE__)',
+                              '#if defined(__i386__) && defined(__OPTIMIZE__) && !defined(__PIC__)')
 
     def configure_cmake(self):
         cmake = CMake(self)
