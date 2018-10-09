@@ -5,11 +5,13 @@ from conans import ConanFile, CMake, tools
 import os
 
 
-class MbedTLS(ConanFile):
+class MbedTLSConan(ConanFile):
     name = "mbedtls"
-    version = "2.11.0"
+    version = "2.13.0"
     description = "An open source, portable, easy to use, readable and flexible SSL library "
     url = "https://github.com/bincrafters/conan-mbedtls"
+    homepage = "https://github.com/ARMmbed/mbedtls"
+    author = "Bincrafters <bincrafters@gmail.com>"
     license = "Apache-2.0"
     exports = ["LICENSE.md"]
     generators = "cmake"
