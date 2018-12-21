@@ -17,8 +17,8 @@ class MbedTLSConan(ConanFile):
     generators = "cmake"
     exports_sources = ["CMakeLists.txt"]
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    options = {"shared": [True, False], "fPIC": [True, False], "zlib": [True, False]}
+    default_options = {"shared": False, "fPIC": True, "zlib": True}
 
     _source_subfolder = "source_subfolder"
     _build_subfolder = "build_subfolder"
@@ -26,6 +26,10 @@ class MbedTLSConan(ConanFile):
     def config_options(self):
         if self.settings.os == 'Windows':
             del self.options.fPIC
+
+    def requirements(self):
+        if self.options.zlib:
+            self.requires("zlib/1.2.11@conan/stable")
 
     def source(self):
         source_url = "https://github.com/ARMmbed/mbedtls"
@@ -81,6 +85,7 @@ class MbedTLSConan(ConanFile):
 
         cmake.definitions["USE_SHARED_MBEDTLS_LIBRARY"] = self.options.shared
         cmake.definitions["USE_STATIC_MBEDTLS_LIBRARY"] = not self.options.shared
+        cmake.definitions["ENABLE_ZLIB_SUPPORT"] = self.options.zlib
         cmake.configure(build_folder=self._build_subfolder)
         return cmake
 
