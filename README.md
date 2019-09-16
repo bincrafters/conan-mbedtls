@@ -2,7 +2,7 @@
 
 | Bintray | Windows | Linux & macOS |
 |:--------:|:---------:|:-----------------:|
-|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/mbedtls%3Abincrafters/images/download.svg)](https://bintray.com/bincrafters/public-conan/mbedtls%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-mbedtls?svg=true)](https://ci.appveyor.com/project/BinCrafters/conan-mbedtls)|[![Build Status](https://travis-ci.org/bincrafters/conan-mbedtls.svg?)](https://travis-ci.org/bincrafters/conan-mbedtls)|
+|[![Download](https://api.bintray.com/packages/bincrafters/public-conan/mbedtls%3Abincrafters/images/download.svg)](https://bintray.com/bincrafters/public-conan/mbedtls%3Abincrafters/_latestVersion)|[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-mbedtls?svg=true)](https://ci.appveyor.com/project/BinCrafters/conan-mbedtls)|[![Build Status](https://travis-ci.com/bincrafters/conan-mbedtls.svg?)](https://travis-ci.com/bincrafters/conan-mbedtls)|
 
 ## Conan.io Information
 

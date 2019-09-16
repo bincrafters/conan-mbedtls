@@ -29,7 +29,7 @@ class MbedTLSConan(ConanFile):
 
     def requirements(self):
         if self.options.zlib:
-            self.requires("zlib/1.2.11@conan/stable")
+            self.requires("zlib/1.2.11")
 
     def source(self):
         source_url = "https://github.com/ARMmbed/mbedtls"
